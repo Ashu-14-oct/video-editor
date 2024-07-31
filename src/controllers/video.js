@@ -76,6 +76,16 @@ const getVideoAsset = async (req, res, handleErr) => {
             file = await fs.open(`./storage/${videoId}/thumbnail.jpg`, "r");
             mimeType = "image/jpeg";
             break;
+        case "audio":
+            file = await fs.open(`./storage/${videoId}/audio.aac`, "r");
+            mimeType = "audio/aac";
+            filename = `${video.name}-audio.aac`;
+            break;
+        case "resize":
+            const dimensions = req.params.get("dimensions");
+            file = await fs.open(`./storage/${videoId}/${dimensions}.${video.extension}`, "r");
+            mimeType = "video/mp4";
+            filename = `${video.name}-${dimensions}.${video.extension}`;
         case "original":
             file = await fs.open(`./storage/${videoId}/original.${video.extension}`, "r");
             mimeType = `video/${video.extension}`;
