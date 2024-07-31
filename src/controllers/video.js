@@ -76,9 +76,17 @@ const getVideoAsset = async (req, res, handleErr) => {
             file = await fs.open(`./storage/${videoId}/thumbnail.jpg`, "r");
             mimeType = "image/jpeg";
             break;
+        case "original":
+            file = await fs.open(`./storage/${videoId}/original.${video.extension}`, "r");
+            mimeType = `video/${video.extension}`;
+            filename = `${video.name}.${video.extension}`;
+            break;
     }
     try {
         const stat = await file.stat();
+        if(type !== "thumbnail"){
+            res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
+        }
         res.setHeader("Content-Type", mimeType);
         res.setHeader("Content-Length", stat.size);
         res.status(200);
